@@ -1,0 +1,487 @@
+/* 모바일 전용 시공사 평가 설문조사 */
+.container {
+  max-width: 100%;
+  padding: 16px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* 프로젝트 정보 카드 */
+.project-info-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #6b73ff;
+}
+
+/* 정보 그리드 (모바일 최적화) */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #666;
+  font-size: 13px;
+}
+
+.info-value {
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+  font-size: 13px;
+}
+
+/* 평가 섹션 */
+.evaluation-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.evaluation-item {
+  margin-bottom: 20px;
+}
+
+.evaluation-item:last-child {
+  margin-bottom: 0;
+}
+
+.evaluation-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* 별점 컨테이너 (모바일 최적화) */
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+/* 별점 버튼 (작은 크기) */
+.star-button {
+  background: none !important;
+  border: none !important;
+  font-size: 20px !important;
+  color: #ddd !important;
+  cursor: pointer !important;
+  padding: 2px !important;
+  margin: 0 1px !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+  border-radius: 2px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.star-button:hover {
+  transform: scale(1.1) !important;
+  color: #ffcc00 !important;
+}
+
+.star-button:active {
+  transform: scale(0.95) !important;
+}
+
+.star-button.selected {
+  color: #ffd700 !important;
+  background-color: transparent !important;
+}
+
+/* 현재 평점 표시 */
+.rating-display {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* 댓글 섹션 */
+.comments-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 제출 버튼 */
+.submit-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.submit-button {
+  background: #6b73ff;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.submit-button:hover {
+  background: #5a63e6;
+  transform: translateY(-1px);
+}
+
+.submit-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 - 매우 작은 화면 */
+@media (max-width: 360px) {
+  .container {
+    padding: 12px;
+  }
+
+  .star-button {
+    font-size: 18px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+  }
+}
+
+/* 새로운 별점 스타일 - 적당한 크기로 조정 */
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 12px 0;
+}
+
+.star-button {
+  background: white;
+  border: 1px solid #ddd;
+  color: #ccc;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  margin: 0 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-family: inherit;
+}
+
+.star-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.star-button:focus {
+  outline: 2px solid #0176d3;
+  outline-offset: 2px;
+}
+
+/* 기본 상태에서도 약간의 hover 효과 */
+.star-button:not([style*="color: rgb(255, 215, 0)"]):hover {
+  color: #ffd700 !important;
+  border-color: #ffd700 !important;
+  background-color: #fff9e6 !important;
+}
+
+.rating-description {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.rating-display {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 8px;
+}
+
+/* 평점 요약 */
+.rating-summary {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  border: 1px solid #e9ecef;
+}
+
+.rating-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.rating-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.rating-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #6b73ff;
+}
+
+/* 평가 폼 */
+.evaluation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.evaluation-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+}
+
+/* 질문 블록 */
+.question-block {
+  margin-bottom: 24px;
+}
+
+.question-block:last-child {
+  margin-bottom: 0;
+}
+
+.question-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* 별점 컨테이너 */
+.rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 별점 UI */
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.star-wrapper {
+  display: inline-block;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ddd;
+  cursor: pointer;
+  padding: 4px;
+  transition: all 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.star-button:hover {
+  color: #ffd700;
+  transform: scale(1.1);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.star-button:active {
+  transform: scale(0.95);
+}
+
+/* 선택된 별 상태 - 우선순위 높임 */
+.star-button.star-selected {
+  color: #ffd700 !important;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8) !important;
+  background: rgba(255, 215, 0, 0.1) !important;
+  border: 1px solid #ffd700 !important;
+  transform: scale(1.05) !important;
+}
+
+/* 빈 별 상태 */
+.star-button.star-empty {
+  color: #ddd !important;
+  text-shadow: none !important;
+  background: transparent !important;
+  border: 1px solid #ddd !important;
+}
+
+/* 호버 효과 */
+.star-button:hover {
+  color: #ffd700 !important;
+  transform: scale(1.1) !important;
+  background: rgba(255, 215, 0, 0.15) !important;
+  border: 1px solid #ffd700 !important;
+  transition: all 0.2s ease !important;
+}
+
+.rating-display {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.rating-description {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+/* 댓글 섹션 */
+.comment-section {
+  margin-top: 8px;
+}
+
+.mobile-textarea {
+  --slds-c-textarea-sizing-border: 2px solid #e9ecef;
+  --slds-c-textarea-color-border-focus: #6b73ff;
+  border-radius: 8px;
+}
+
+/* 제출 섹션 */
+.submit-section {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+  margin: 24px -20px -20px -20px;
+}
+
+.submit-button {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* 기존 별점 시스템 호환성 */
+.star-rating {
+  display: flex;
+  gap: 4px;
+}
+
+.star-button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.star-button:hover {
+  transform: scale(1.1);
+}
+
+.slds-section {
+  margin-bottom: 1.5rem;
+}
+
+.slds-section__title {
+  background-color: #f3f3f3;
+  padding: 0.5rem;
+  border-left: 4px solid #1589ee;
+  font-weight: 600;
+  color: #181818;
+}
+
+.slds-form-element {
+  margin-bottom: 1rem;
+}
+
+.slds-form-element__label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+/* 반응형 - 태블릿 이상 */
+@media (min-width: 768px) {
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .rating-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .submit-section {
+    position: static;
+    margin: 24px 0 0 0;
+  }
+
+  .submit-button {
+    width: auto;
+    min-width: 200px;
+  }
+}

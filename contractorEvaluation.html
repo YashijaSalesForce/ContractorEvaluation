@@ -1,0 +1,549 @@
+﻿<template>
+  <lightning-card title="시공사 평가" icon-name="standard:survey">
+    <div class="slds-p-around_medium">
+      <!-- 로딩 스피너 -->
+      <template if:true={isLoading}>
+        <lightning-spinner
+          alternative-text="Loading"
+          size="medium"
+        ></lightning-spinner>
+      </template>
+
+      <!-- recordId나 projectId가 없을 때 -->
+      <template if:false={hasValidProjectId}>
+        <div class="slds-text-align_center slds-p-around_large">
+          <lightning-icon
+            icon-name="utility:warning"
+            size="large"
+            variant="warning"
+          ></lightning-icon>
+          <h3 class="slds-text-heading_medium slds-m-top_medium">
+            Project ID가 필요합니다
+          </h3>
+          <p class="slds-m-top_small">
+            이 설문조사를 이용하려면 올바른 링크를 통해 접근해야 합니다.
+          </p>
+
+          <!-- 테스트용 Project ID 입력 -->
+          <div class="slds-m-top_large slds-border_top slds-p-top_medium">
+            <h4 class="slds-text-heading_small slds-m-bottom_small">
+              테스트용 Project ID 입력
+            </h4>
+            <div class="slds-form-element">
+              <div class="slds-form-element__control">
+                <lightning-input
+                  type="text"
+                  label="Construction Project ID"
+                  placeholder="예: a01XX0000000ABC"
+                  value={tempProjectId}
+                  onchange={handleTempProjectIdChange}
+                >
+                </lightning-input>
+              </div>
+            </div>
+            <div class="slds-m-top_small">
+              <lightning-button
+                variant="brand"
+                label="설문 시작하기"
+                onclick={handleLoadWithTempId}
+                disabled={isTempIdDisabled}
+              >
+              </lightning-button>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- recordId나 projectId가 있고 로딩이 끝났을 때 -->
+      <template if:true={hasValidProjectId}>
+        <template if:false={isLoading}>
+          <!-- 시공 프로젝트 정보 -->
+          <div class="project-info-card">
+            <h3 class="section-title">시공 프로젝트 정보</h3>
+            <template if:true={projectData}>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">프로젝트명</span>
+                  <span class="info-value">{projectData.Name}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">시공사</span>
+                  <span class="info-value">{contractorInfo}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">연락처</span>
+                  <span class="info-value">{contractorPhone}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">시공사 주소</span>
+                  <span class="info-value">{contractorAddress}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">시공 시작일</span>
+                  <span class="info-value">{projectData.Start_Date__c}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">원래 완공 목표일</span>
+                  <span class="info-value"
+                    >{projectData.Original_End_Date__c}</span
+                  >
+                </div>
+                <div class="info-item">
+                  <span class="info-label">실제 완공일</span>
+                  <span class="info-value"
+                    >{projectData.Actual_End_Date__c}</span
+                  >
+                </div>
+                <div class="info-item">
+                  <span class="info-label">지연 일수</span>
+                  <span class="info-value">{delayInfo}</span>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <!-- 평가 폼 -->
+          <div class="evaluation-form">
+            <!-- 시공 품질 평가 -->
+            <div class="evaluation-section">
+              <h3 class="section-title">시공 품질 평가</h3>
+
+              <div class="question-block">
+                <div class="question-text">
+                  전체적인 시공 품질에 만족하십니까?
+                </div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="workQuality"
+                      data-value="1"
+                      type="button"
+                    >
+                      <span class={getStarStyle}></span>★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="workQuality"
+                      data-value="2"
+                      type="button"
+                    >
+                      <span class={getStarStyle}></span>★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="workQuality"
+                      data-value="3"
+                      type="button"
+                    >
+                      <span class={getStarStyle}></span>★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="workQuality"
+                      data-value="4"
+                      type="button"
+                    >
+                      <span class={getStarStyle}></span>★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="workQuality"
+                      data-value="5"
+                      type="button"
+                    >
+                      <span class={getStarStyle}></span>★
+                    </button>
+                  </div>
+                  <div class="rating-description">매우 불만족 ~ 매우 만족</div>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <div class="question-text">
+                  시공 마감의 완성도는 어떠했습니까?
+                </div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="finishing"
+                      data-value="1"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="finishing"
+                      data-value="2"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="finishing"
+                      data-value="3"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="finishing"
+                      data-value="4"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="finishing"
+                      data-value="5"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                  </div>
+                  <div class="rating-description">매우 부족 ~ 매우 우수</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 일정 관리 평가 -->
+            <div class="evaluation-section">
+              <h3 class="section-title">일정 관리</h3>
+
+              <div class="question-block">
+                <div class="question-text">약속된 일정을 잘 지켰습니까?</div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="timeManagement"
+                      data-value="1"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="timeManagement"
+                      data-value="2"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="timeManagement"
+                      data-value="3"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="timeManagement"
+                      data-value="4"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="timeManagement"
+                      data-value="5"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                  </div>
+                  <div class="rating-description">매우 지연 ~ 완벽 준수</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 소통 및 서비스 -->
+            <div class="evaluation-section">
+              <h3 class="section-title">소통 및 서비스</h3>
+
+              <div class="question-block">
+                <div class="question-text">시공사와의 소통은 원활했습니까?</div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="communication"
+                      data-value="1"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="communication"
+                      data-value="2"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="communication"
+                      data-value="3"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="communication"
+                      data-value="4"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="communication"
+                      data-value="5"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                  </div>
+                  <div class="rating-description">매우 부족 ~ 매우 원활</div>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <div class="question-text">
+                  직원들의 서비스 태도는 어떠했습니까?
+                </div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="serviceAttitude"
+                      data-value="1"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="serviceAttitude"
+                      data-value="2"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="serviceAttitude"
+                      data-value="3"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="serviceAttitude"
+                      data-value="4"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="serviceAttitude"
+                      data-value="5"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                  </div>
+                  <div class="rating-description">매우 불친절 ~ 매우 친절</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 가격 만족도 -->
+            <div class="evaluation-section">
+              <h3 class="section-title">가격 만족도</h3>
+
+              <div class="question-block">
+                <div class="question-text">시공 비용이 합리적이었습니까?</div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="pricing"
+                      data-value="1"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="pricing"
+                      data-value="2"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="pricing"
+                      data-value="3"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="pricing"
+                      data-value="4"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="pricing"
+                      data-value="5"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                  </div>
+                  <div class="rating-description">매우 비쌈 ~ 매우 합리적</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 종합 평가 -->
+            <div class="evaluation-section">
+              <h3 class="section-title">종합 평가</h3>
+
+              <div class="question-block">
+                <div class="question-text">
+                  전체적으로 이 시공사를 다른 분께 추천하시겠습니까?
+                </div>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="overallSatisfaction"
+                      data-value="1"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="overallSatisfaction"
+                      data-value="2"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="overallSatisfaction"
+                      data-value="3"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="overallSatisfaction"
+                      data-value="4"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                    <button
+                      class="star-button"
+                      onclick={handleStarClick}
+                      data-field="overallSatisfaction"
+                      data-value="5"
+                      type="button"
+                    >
+                      ★
+                    </button>
+                  </div>
+                  <div class="rating-description">절대 비추천 ~ 적극 추천</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 추가 의견 -->
+            <div class="evaluation-section">
+              <h3 class="section-title">추가 의견</h3>
+              <div class="comment-section">
+                <lightning-textarea
+                  placeholder="시공 과정에서 좋았던 점이나 개선이 필요한 점을 자유롭게 작성해 주세요."
+                  value={evaluationData.comments}
+                  onchange={handleCommentsChange}
+                  rows="4"
+                  class="mobile-textarea"
+                >
+                </lightning-textarea>
+              </div>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <div class="submit-section">
+              <lightning-button
+                variant="brand"
+                label="평가 제출하기"
+                onclick={handleSubmit}
+                disabled={isSubmitDisabled}
+                class="submit-button"
+              >
+              </lightning-button>
+            </div>
+          </div>
+        </template>
+      </template>
+    </div>
+  </lightning-card>
+</template>
